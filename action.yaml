@@ -1,0 +1,29 @@
+name: Frontmatter from content to JSON
+author: TheWolfNL
+description: Convert frontmatter from a content string to a JSON string
+
+branding:
+  icon: align-center
+  color: blue
+
+inputs:
+  content:
+    description: content as a single string
+    required: true
+
+outputs:
+  json:
+    description: JSON object containing frontmatter
+    value: ${{ steps.data.outputs.json }}
+
+runs:
+  using: composite
+  steps:
+    - id: data
+      name: Extract frontmatter from content
+      shell: bash
+      run: |
+        JSON=$(echo '${{ inputs.content }}' | jq -R | jq -cs '.[0:([to_entries[] | select(.value == "---") | .key] | max)+1] | map(select(. == "---" | not)) | map(capture("^(?<key>[^:]+): (?<value>.*)$")) | from_entries')
+        echo 'Frontmatter:' 
+        echo $JSON | jq
+        echo "json=$JSON" >> $GITHUB_OUTPUT
