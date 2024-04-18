@@ -21,7 +21,7 @@ This is a GitHub Action that converts the frontmatter in a file or content strin
 ...
   - id: content
     name: Extract frontmatter from content
-    uses: TheWolfNL/frontmatter-to-json@master
+    uses: TheWolfNL/frontmatter-to-json@v1
     with:
       content: '---\ntitle: lorem ipsum\ndescription: hello world\nnumber: 42\ndate: 2024-12-31\n---\n\n# Header 1 #\n\nParagraph 1'
 
@@ -41,7 +41,7 @@ This is a GitHub Action that converts the frontmatter in a file or content strin
 ...
   - id: file
     name: Extract frontmatter from file
-    uses: TheWolfNL/frontmatter-to-json@master
+    uses: TheWolfNL/frontmatter-to-json@v1
     with:
       file: 'samples/simple.md'
 
@@ -63,7 +63,7 @@ This is a GitHub Action that converts the frontmatter in a file or content strin
 ...
   - id: file
     name: Extract frontmatter from file
-    uses: TheWolfNL/frontmatter-to-json@master
+    uses: TheWolfNL/frontmatter-to-json@v1
     with:
       file: 'samples/simple.md'
 
@@ -92,7 +92,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: file
         name: Extract frontmatter from file
-        uses: TheWolfNL/frontmatter-to-json@master
+        uses: TheWolfNL/frontmatter-to-json@v1
         with:
             file: 'samples/list.md'
   keys:
