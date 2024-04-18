@@ -26,16 +26,18 @@ runs:
       name: Read file to content
       if: inputs.file != ''
       shell: bash
-      run: echo "content=$(< '${{ inputs.file }}' | sed 's/$/\\n/' | tr -d '\n')" >> $GITHUB_OUTPUT
+      run: |
+        set -eux
+        content=$(< '${{ inputs.file }}' | sed 's/$/\\n/' | tr -d '\n')
+        echo 'Content:'
+        echo $content
+        echo "content=$content" >> $GITHUB_OUTPUT
 
     - id: data
       name: Extract frontmatter from content
       shell: bash
       run: |
-        content=$(echo '${{ inputs.content }}')
-        if [ "${{ inputs.file }}" != '' ]; then
-          content=$(echo '${{ steps.file.outputs.content }}')
-        fi
+        content=$(echo '${{ inputs.file != '' && steps.file.outputs.content || inputs.content }}')
         JSON=$(jq -R <<< $content | jq -rs '.[0:([to_entries[] | select(.value == "---") | .key] | max)+1] | .[]' | yq 'select(. != null)' -o json | jq -c)
         echo 'Frontmatter:' 
         echo $JSON | jq
