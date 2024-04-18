@@ -32,7 +32,10 @@ runs:
       name: Extract frontmatter from content
       shell: bash
       run: |
-        content=$(echo '${{ inputs.file != '' ? steps.file.outputs.content : inputs.content }}')
+        content=$(echo '${{ inputs.content }}')
+        if [ "${{ inputs.file }}" != '' ]; then
+          content=$(echo '${{ steps.file.outputs.content }}')
+        fi
         JSON=$(jq -R <<< $content | jq -rs '.[0:([to_entries[] | select(.value == "---") | .key] | max)+1] | .[]' | yq 'select(. != null)' -o json | jq -c)
         echo 'Frontmatter:' 
         echo $JSON | jq
