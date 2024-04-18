@@ -30,17 +30,17 @@ runs:
         set -eux
         content=$(sed 's/$/\\n/' < '${{ inputs.file }}' | tr -d '\n')
         echo 'Content:'
-        echo $content
-        echo "content=$content" >> $GITHUB_OUTPUT
-        echo "content2=$(sed 's/$/\\n/' < '${{ inputs.file }}' | tr -d '\n')" >> $GITHUB_OUTPUT
+        echo "$content"
+        echo "content='$content'" >> $GITHUB_OUTPUT
+        echo "content2='$(sed 's/$/\\n/' < '${{ inputs.file }}' | tr -d '\n')'" >> $GITHUB_OUTPUT
 
     - id: data
       name: Extract frontmatter from content
       shell: bash
       run: |
-        jq -R <<< "${{ steps.file.outputs.content2 }}" | jq -s
+        jq -Rr <<< "${{ steps.file.outputs.content2 }}" | jq -s
         content=$(echo '${{ inputs.file != '' && steps.file.outputs.content || inputs.content }}')
-        jq -R <<< $content | jq -s
+        jq -Rr <<< $content | jq -s
         JSON=$(jq -R <<< $content | jq -rs '.[0:([to_entries[] | select(.value == "---") | .key] | max)+1] | .[]' | yq 'select(. != null)' -o json | jq -c)
         echo 'Frontmatter:' 
         echo $JSON | jq
