@@ -26,7 +26,7 @@ runs:
       name: Read file to content
       if: inputs.file != ''
       shell: bash
-      run: echo "content=$(jq -R < '${{ inputs.file }}')" >> $GITHUB_OUTPUT
+      run: echo "content=$(jq -Rrs < '${{ inputs.file }}')" >> $GITHUB_OUTPUT
 
     - id: data
       name: Extract frontmatter from content
