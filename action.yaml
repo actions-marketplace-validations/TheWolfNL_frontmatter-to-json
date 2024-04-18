@@ -28,7 +28,9 @@ runs:
       shell: bash
       run: |
         set -eux
+        < '${{ inputs.file }}' | sed 's/$/\\n/' | tr -d '\n'
         content=$(< '${{ inputs.file }}' | sed 's/$/\\n/' | tr -d '\n')
+        sed 's/$/\\n/' < '${{ inputs.file }}' | tr -d '\n'
         echo 'Content:'
         echo $content
         echo "content=$content" >> $GITHUB_OUTPUT
